@@ -2,7 +2,9 @@
 
 namespace MyProject\Controllers;
 
-use MyProject\Services\Db;
+use MyProject\Models\Articles\Article;
+
+use MyProject\Models\Users\User;
 
 use MyProject\View\View;
 
@@ -14,33 +16,21 @@ class ArticlesController
 
     private $view;
 
-    /** @var Db */
-
-    private $db;
-
     public function __construct()
 
     {
 
         $this->view = new View(__DIR__ . '/../../../templates');
 
-        $this->db = new Db();
-
     }
 
-    public function view(int $articleId)
+    public function view(int $articleId): void
 
     {
 
-        $result = $this->db->query(
+        $article = Article::getById($articleId);
 
-            'SELECT * FROM `articles` WHERE id = :id;',
-
-            [':id' => $articleId]
-
-        );
-
-        if ($result === []) {
+        if ($article === null) {
 
             $this->view->renderHtml('errors/404.php', [], 404);
 
@@ -48,27 +38,51 @@ class ArticlesController
 
         }
 
-        $article = $result[0];
+        $this->view->renderHtml('articles/view.php', ['article' => $article]);
 
-        // Получаем автора статьи
-        $authorResult = $this->db->query(
+    }
 
-            'SELECT nickname FROM `users` WHERE id = :id',
+     public function edit(int $articleId): void
 
-            [':id' => $article->author_id]
+    {
 
-        );
+        $article = Article::getById($articleId);
 
-        $authorNickname = $authorResult ? $authorResult[0]->nickname : 'Неопознанная капибара';
+ 
 
-        // Передаём статью и nickname автора в шаблон
-        $this->view->renderHtml('articles/view.php', [
+        if ($article === null) {
 
-            'article' => $article,
+            $this->view->renderHtml('errors/404.php', [], 404);
 
-            'authorNickname' => $authorNickname
+            return;
 
-        ]);
+        }
+
+        $article->setName('Новое название статьи');
+
+        $article->setText('Новый текст статьи');
+
+        $article->save();
+
+    }
+
+    public function add(): void
+
+    {
+
+        $author = User::getById(1);
+
+        $article = new Article();
+
+        $article->setAuthor($author);
+
+        $article->setName('Новое название статьи');
+
+        $article->setText('Новый текст статьи');
+
+        $article->save();
+
+        var_dump($article);
 
     }
 

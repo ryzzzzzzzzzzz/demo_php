@@ -1,5 +1,5 @@
 <?php include __DIR__ . '/../header.php'; ?>
-<h1><?= htmlspecialchars($article->name) ?></h1>
-<p><?= htmlspecialchars($article->text) ?></p>
-<p><strong>Автор:</strong> <?= htmlspecialchars($authorNickname) ?></p>
+    <h1><?= $article->getName() ?></h1>
+    <p><?= $article->getText() ?></p>
+    <p>Автор: <?= $article->getAuthor()->getNickname() ?></p>
 <?php include __DIR__ . '/../footer.php'; ?>
