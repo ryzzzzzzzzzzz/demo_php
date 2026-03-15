@@ -48,7 +48,27 @@ class ArticlesController
 
         }
 
-        $this->view->renderHtml('articles/view.php', ['article' => $result[0]]);
+        $article = $result[0];
+
+        // Получаем автора статьи
+        $authorResult = $this->db->query(
+
+            'SELECT nickname FROM `users` WHERE id = :id',
+
+            [':id' => $article->author_id]
+
+        );
+
+        $authorNickname = $authorResult ? $authorResult[0]->nickname : 'Неопознанная капибара';
+
+        // Передаём статью и nickname автора в шаблон
+        $this->view->renderHtml('articles/view.php', [
+
+            'article' => $article,
+
+            'authorNickname' => $authorNickname
+
+        ]);
 
     }
 
