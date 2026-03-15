@@ -20,4 +20,8 @@ return [
 
     '~^users/activate$~' => [\MyProject\Controllers\UsersController::class, 'activate'],
 
+    '~^articles/(\d+)/comments$~' => [\MyProject\Controllers\ArticlesController::class, 'addComment'],
+    
+    '~^comments/(\d+)/edit$~' => [\MyProject\Controllers\ArticlesController::class, 'editComment'],
+
 ];

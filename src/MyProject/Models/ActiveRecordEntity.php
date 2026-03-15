@@ -154,7 +154,7 @@ abstract class ActiveRecordEntity
 
         //здесь мы создаём новую запись в базе
 
-        $filteredProperties = array_filter($mappedProperties);
+        $filteredProperties = $mappedProperties;
 
          $columns = [];
 
@@ -238,6 +238,23 @@ abstract class ActiveRecordEntity
 
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $source));
 
+    }
+
+    public static function findAllByColumn(string $columnName, $value): array
+
+    {
+
+        $db = \MyProject\Services\Db::getInstance();
+
+        return $db->query(
+
+            'SELECT * FROM `' . static::getTableName() . '` WHERE `' . $columnName . '` = :value;',
+
+            [':value' => $value],
+
+            static::class
+            
+        );
     }
 
     abstract protected static function getTableName(): string;
