@@ -4,19 +4,15 @@ namespace MyProject\Controllers;
 
 use MyProject\Models\Articles\Article;
 
-use MyProject\View\View;
-
-class MainController
+class MainController extends AbstractController
 
 {
-
-    private $view;
 
     public function __construct()
 
     {
-
-        $this->view = new View(__DIR__ . '/../../../templates');
+        
+        parent::__construct();
 
     }
 

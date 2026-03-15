@@ -1,10 +1,12 @@
 <?php 
 
-spl_autoload_register(function (string $className) {
+try {
 
-    require_once __DIR__ . '/../src/' . str_replace('\\', '/', $className) . '.php';
+    spl_autoload_register(function (string $className) {
 
-});
+        require_once __DIR__ . '/../src/' . $className . '.php';
+
+    });
 
 $route = $_GET['route'] ?? ''; // приходит из .htaccess
 
@@ -29,9 +31,7 @@ foreach ($routes as $pattern => $controllerAndAction) {
 
 if (!$isRouteFound) {
 
-    echo 'Страница не найдена!';
-
-    return;
+    throw new \MyProject\Exceptions\NotFoundException();
 
 }
 
@@ -45,6 +45,20 @@ $actionName = $controllerAndAction[1];
 $controller = new $controllerName();
 
 $controller->$actionName(...$matches);
+
+} catch (\MyProject\Exceptions\DbException $e) {
+
+    $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
+
+    $view->renderHtml('500.php', ['error' => $e->getMessage()], 500);
+
+} catch (\MyProject\Exceptions\NotFoundException $e) {
+
+    $view = new \MyProject\View\View(__DIR__ . '/../templates/errors');
+
+    $view->renderHtml('404.php', ['error' => $e->getMessage()], 404);
+
+}
 // ===
 
 // ================================================================================

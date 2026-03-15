@@ -2,6 +2,8 @@
 
 namespace MyProject\Services;
 
+use MyProject\Exceptions\DbException;
+
 class Db
 
 {
@@ -20,17 +22,37 @@ class Db
 
         $dbOptions = (require __DIR__ . '/../../settings.php')['db'];
 
-        $this->pdo = new \PDO(
+        try {
 
-            'mysql:host=' . $dbOptions['host'] . ';dbname=' . $dbOptions['dbname'],
+            $this->pdo = new \PDO(
 
-            $dbOptions['user'],
+                'mysql:host=' . $dbOptions['host'] . ';dbname=' . $dbOptions['dbname'],
 
-            $dbOptions['password']
+                $dbOptions['user'],
 
-        );
+                $dbOptions['password']
 
-        $this->pdo->exec('SET NAMES UTF8');
+            );
+
+            $this->pdo->exec('SET NAMES UTF8');
+
+        } catch (\PDOException $e) {
+
+            throw new DbException('Ошибка при подключении к базе данных: ' . $e->getMessage());
+
+        }
+
+        // $this->pdo = new \PDO(
+
+        //     'mysql:host=' . $dbOptions['host'] . ';dbname=' . $dbOptions['dbname'],
+
+        //     $dbOptions['user'],
+
+        //     $dbOptions['password']
+
+        // );
+
+        // $this->pdo->exec('SET NAMES UTF8');
 
     }
 
@@ -51,6 +73,14 @@ class Db
         return $sth->fetchAll(\PDO::FETCH_CLASS, $className);
 
     }
+
+    public function getPdo(): \PDO
+
+        {
+
+            return $this->pdo;
+
+        }
 
     public static function getInstance(): self
 

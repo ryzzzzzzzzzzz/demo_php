@@ -2,25 +2,21 @@
 
 namespace MyProject\Controllers;
 
+use MyProject\Exceptions\NotFoundException;
+
 use MyProject\Models\Articles\Article;
 
 use MyProject\Models\Users\User;
 
-use MyProject\View\View;
-
-class ArticlesController
+class ArticlesController extends AbstractController
 
 {
-
-    /** @var View */
-
-    private $view;
 
     public function __construct()
 
     {
 
-        $this->view = new View(__DIR__ . '/../../../templates');
+        parent::__construct();
 
     }
 
@@ -32,9 +28,7 @@ class ArticlesController
 
         if ($article === null) {
 
-            $this->view->renderHtml('errors/404.php', [], 404);
-
-            return;
+            throw new NotFoundException();
 
         }
 
@@ -52,9 +46,7 @@ class ArticlesController
 
         if ($article === null) {
 
-            $this->view->renderHtml('errors/404.php', [], 404);
-
-            return;
+            throw new NotFoundException();
 
         }
 
