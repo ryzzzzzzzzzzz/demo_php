@@ -58,11 +58,24 @@ class ArticlesController
 
         }
 
-        $article->setName('Новое название статьи');
+        if (!empty($_POST)) {
 
-        $article->setText('Новый текст статьи');
+            $article->setName($_POST['name']);
 
-        $article->save();
+            $article->setText($_POST['text']);
+
+            $article->save();
+
+            header('Location: /demo/www/articles/' . $article->getId());
+
+            exit();
+        }
+
+        $this->view->renderHtml('articles/edit.php', [
+
+            'article' => $article
+
+        ]);
 
     }
 
