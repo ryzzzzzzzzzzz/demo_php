@@ -6,4 +6,6 @@ return [
 
     '~^$~' => [\MyProject\Controllers\MainController::class, 'main'],
 
+    '~^bye/(.*)$~' => [\MyProject\Controllers\MainController::class, 'sayBye'],
+
 ];

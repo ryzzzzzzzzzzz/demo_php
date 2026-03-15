@@ -1,22 +1,14 @@
 <?php
 
- 
-
 namespace MyProject\Controllers;
 
- 
-
 use MyProject\View\View;
-
- 
 
 class MainController
 
 {
 
     private $view;
-
- 
 
     public function __construct()
 
@@ -25,8 +17,6 @@ class MainController
         $this->view = new View(__DIR__ . '/../../../templates');
 
     }
-
- 
 
     public function main()
 
@@ -44,13 +34,19 @@ class MainController
 
     }
 
- 
-
     public function sayHello(string $name)
 
     {
 
         $this->view->renderHtml('main/hello.php', ['name' => $name]);
+
+    }
+
+    public function sayBye(string $name)
+
+    {
+
+        $this->view->renderHtml('main/bye.php', ['name' => $name]);
 
     }
 
